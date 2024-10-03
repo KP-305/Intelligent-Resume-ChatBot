@@ -15,7 +15,8 @@ from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+GOOGLE_API_KEY = st.secrets["api"]["key"]
+genai.configure(api_key=os.getenv(GOOGLE_API_KEY))
 
 # Utility functions
 def get_text_chunks(text):
