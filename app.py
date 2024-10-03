@@ -294,8 +294,8 @@ def main():
         if user_question:
             file_path = "MihirDhirajlal_Satra_Resume.pdf"  
             raw_text = get_pdf_text(file_path)
-            print(raw_text)
             text_chunks = get_text_chunks(raw_text)
+            print(text_chunks)
             get_vector_store(text_chunks)
             response = handle_user_input(user_question)
             print(response)
