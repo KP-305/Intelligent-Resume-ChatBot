@@ -8,5 +8,5 @@ langchain_google_genai
 chromadb
 streamlit_lottie==0.0.3
 streamlit_timeline==0.0.2
-Pillow==9.5.0
+Pillow==9.0.1
 Requests==2.30.0
