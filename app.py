@@ -296,8 +296,11 @@ def main():
             raw_text = get_pdf_text(file_path)
             text_chunks = get_text_chunks(raw_text)
             print(text_chunks)
-            get_vector_store(text_chunks)
-            response = handle_user_input(user_question)
+            try:
+                get_vector_store(text_chunks)
+                response = handle_user_input(user_question)
+            except Exception as error:
+                print(error)
             print(response)
             st.write("Chatbot Reply: ", response)
 
