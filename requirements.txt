@@ -9,3 +9,4 @@ chromadb
 streamlit_lottie==0.0.3
 streamlit_timeline==0.0.2
 Requests==2.30.0
+langchain_community==0.3.1
