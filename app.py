@@ -66,7 +66,8 @@ def render_about_section():
     with col1:
         st.header(" Who am I? ")
         st.write("""
-        I'm a highly skilled software engineer with experience in AI, machine learning, big data, cloud computing, and full-stack development.
+        Hi! I'm Mihir, a tech enthusiast currently mastering the art of distributed computing and AI at San Jose State University. When I’m not coding in Python or wrestling with Kubernetes, you can find me optimizing data processes (with a sprinkle of Golang and Elasticsearch) to make systems run faster and smarter. I've helped boost system performance, slashed storage costs, and made data visualization my playground!
+        Whether I’m building dashboards, automating workflows, or crafting cloud solutions, I’m always on the lookout for new ways to make tech do more, with less effort. Oh, and I love a good challenge—especially if it involves solving complex problems or breaking down a tricky algorithm. Let's just say I thrive on optimization—whether it's data pipelines or my morning coffee routine! 😄
         """)
     with col3: 
         st.image("computer-science.png")
@@ -74,55 +75,94 @@ def render_about_section():
 def render_skills_section():
     """Renders the 'Skills' section."""
     st.header("🔧 Skills")
+
     col1, col2, col3, col4, col5 = st.columns([1, 1, 1,1,1])
     with col1:
         st.header(":shamrock: Programming")
-        st.write("Python, Golang, Java, SQL, JavaScript, C")
+        lst =['Python', 'Golang', 'Java', 'SQL', 'JavaScript', 'C']
+        s = ''
+        for i in lst:
+            s += "- " + i + "\n"
+        st.markdown(s)
+       
 
     with col2:
-        st.header(":shamrock: Backend Development")
-        st.write("NodeJS, AngularJS, ExpressJS, ReactJS, Vue.js, Django")
+        st.header(":shamrock: Frontend Development")
+        lst = ['NodeJS', 'AngularJS', 'ExpressJS', 'ReactJS', 'Vue.js', 'Django']
+        s = ''
+        for i in lst:
+            s += "- " + i + "\n"
+        st.markdown(s)
+    
 
     with col3:
         st.header(":shamrock: Backend Development")
-        st.write("NodeJS, AngularJS, ExpressJS, ReactJS, Vue.js, Django")
+        lst = ['Flask' 'Django', 'SpringBoot']
+        s = ''
+        for i in lst:
+            s += "- " + i + "\n"
+        st.markdown(s)
 
     with col4:
         st.header(":shamrock: Cloud Development")
-        st.write("AWS, GCP, Azure")
+        lst = ['AWS' 'GCP', 'Azure']
+        s = ''
+        for i in lst:
+            s += "- " + i + "\n"
+        st.markdown(s)
 
     with col5:
         st.header(":shamrock: Data")
-        st.write("Docker, Kubernetes, Spark, Hadoop")
-
+        lst = ['Docker', 'Kuberentes', 'Spark']
+        s = ''
+        for i in lst:
+            s += "- " + i + "\n"
+        st.markdown(s)
 
 def render_experience_section():
     """Renders the 'Work Experience' section."""
     st.header("💼 Work Experience")
-    experience_list = [
-        {
-            "role": "Software Engineer Intern - Nutanix",
-            "duration": "May 2024 – Present",
-            "description": [
-                "Developed Distributed Tracing using open-source Jaeger and OpenTelemetry.",
-                "Analyzed service dependencies in microservices architecture.",
-                "Enhanced querying with Elasticsearch."
-            ]
-        },
-        {
-            "role": "Senior Data Engineer - LTIMindtree",
-            "duration": "Jul 2021 – Jul 2023",
-            "description": [
-                "Led Azure Synapse data warehouse development.",
-                "Secured $36 million in revenue.",
-                "Decreased BI report load times by 85%."
-            ]
-        }
-    ]
-    for exp in experience_list:
-        st.subheader(exp["role"])
-        st.write(f"**Duration:** {exp['duration']}")
-        st.write("\n".join(f"- {item}" for item in exp['description']))
+
+    col1, col2, col3 = st.columns([1, 1, 1])  # Adjust the number of columns depending on how much content you have
+
+    with col1:
+        st.header(":male-office-worker: Software Engineer Intern - Nutanix")
+        st.markdown("**Duration:** May 2024 – Present")
+        nutanix_desc = [
+            "Developed Distributed Tracing using open-source Jaeger and OpenTelemetry.",
+            "Analyzed service dependencies in microservices architecture.",
+            "Enhanced querying with Elasticsearch."
+        ]
+        desc_str = ''
+        for desc in nutanix_desc:
+            desc_str += "- " + desc + "\n"
+        st.markdown(desc_str)
+
+    with col2:
+        st.header(":male-office-worker: Senior Data Engineer - LTIMindtree")
+        st.markdown("**Duration:** Jul 2021 – Jul 2023")
+        ltimindtree_desc = [
+            "Led Azure Synapse data warehouse development.",
+            "Secured $36 million in revenue.",
+            "Decreased BI report load times by 85%."
+        ]
+        desc_str = ''
+        for desc in ltimindtree_desc:
+            desc_str += "- " + desc + "\n"
+        st.markdown(desc_str)
+
+    with col3:
+        st.header(":male-office-worker: Software Engineer Intern - GRT Global Logistics")
+        st.markdown("**Duration:** Dec 2019 – Jan 2020")
+        grt_desc = [
+            "Streamlined ERP software testing with Selenium automation.",
+            "Collaborated with the technical team to enhance system design."
+        ]
+        desc_str = ''
+        for desc in grt_desc:
+            desc_str += "- " + desc + "\n"
+        st.markdown(desc_str)
+
 
 def render_projects_section():
     """Renders the 'Projects' section."""
@@ -147,16 +187,22 @@ def render_projects_section():
 def render_education_section():
     """Renders the 'Education' section."""
     st.header("🎓 Education")
-    education_list = [
-        {"degree": "Master of Science in Computer Science", "institution": "San Jose State University", "duration": "Aug 2023 – May 2025", "gpa": "GPA – 3.83/4.0"},
-        {"degree": "Bachelor of Science in Computer Engineering", "institution": "University of Mumbai", "duration": "Aug 2017 - May 2021"}
-    ]
-    for edu in education_list:
-        st.subheader(edu["degree"])
-        st.write(f"**Institution:** {edu['institution']}")
-        st.write(f"**Duration:** {edu['duration']}")
-        if 'gpa' in edu:
-            st.write(f"**GPA:** {edu['gpa']}")
+
+    # Define the columns
+    col1, col2 = st.columns([1, 1])  # We can use 2 columns, but you can adjust it based on your preferences
+
+    with col1:
+        st.header(":mortar_board: Master's Degree")
+        st.markdown("**Degree:** Master of Science in Computer Science")
+        st.markdown("**Institution:** San Jose State University")
+        st.markdown("**Duration:** Aug 2023 – May 2025")
+        st.markdown("**GPA:** 3.83/4.0")
+
+    with col2:
+        st.header(":mortar_board: Bachelor's Degree")
+        st.markdown("**Degree:** Bachelor of Science in Computer Engineering")
+        st.markdown("**Institution:** University of Mumbai")
+        st.markdown("**Duration:** Aug 2017 - May 2021")
 
 
 def add_custom_css():
@@ -239,16 +285,18 @@ def main():
     elif section == "Education":
         render_education_section()
 
+
+    with st.container(border = True):
     # Chatbot section
-    st.header("💬 Chatbot")
-    user_question = st.text_input("You: ", placeholder="Type your message here...")
-    if user_question:
-        file_path = r"C:\Users\Checkout\Documents\Kalindi's_Documents\Semester_3\Cs 256\ResumePortfolio\MihirDhirajlal_Satra_Resume.pdf"  
-        raw_text = get_pdf_text(file_path)
-        text_chunks = get_text_chunks(raw_text)
-        get_vector_store(text_chunks)
-        response = handle_user_input(user_question)
-        st.write("Chatbot Reply: ", response)
+        st.header(":balloon: Ask Me Anything!!")
+        user_question = st.text_input("You: ", placeholder="Type your message here...")
+        if user_question:
+            file_path = r"C:\Users\Checkout\Documents\Kalindi's_Documents\Semester_3\Cs 256\ResumePortfolio\MihirDhirajlal_Satra_Resume.pdf"  
+            raw_text = get_pdf_text(file_path)
+            text_chunks = get_text_chunks(raw_text)
+            get_vector_store(text_chunks)
+            response = handle_user_input(user_question)
+            st.write("Chatbot Reply: ", response)
 
     # Footer
     st.markdown('<div class="footer">', unsafe_allow_html=True)
