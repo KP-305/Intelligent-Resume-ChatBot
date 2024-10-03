@@ -292,11 +292,13 @@ def main():
         st.header(":balloon: Ask Me Anything!!")
         user_question = st.text_input("You: ", placeholder="Type your message here...")
         if user_question:
-            file_path = r"MihirDhirajlal_Satra_Resume.pdf"  
+            file_path = "MihirDhirajlal_Satra_Resume.pdf"  
             raw_text = get_pdf_text(file_path)
+            print(raw_text)
             text_chunks = get_text_chunks(raw_text)
             get_vector_store(text_chunks)
             response = handle_user_input(user_question)
+            print(response)
             st.write("Chatbot Reply: ", response)
 
     # Footer
