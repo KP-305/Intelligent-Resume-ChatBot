@@ -244,7 +244,7 @@ def main():
     st.header("💬 Chatbot")
     user_question = st.text_input("You: ", placeholder="Type your message here...")
     if user_question:
-        file_path = r"C:\Users\Checkout\Documents\Kalindi's_Documents\Semester_3\Cs 256\ResumePortfolio\MihirDhirajlal_Satra_Resume.pdf"  
+        file_path = r"MihirDhirajlal_Satra_Resume.txt"  
         raw_text = get_pdf_text(file_path)
         text_chunks = get_text_chunks(raw_text)
         get_vector_store(text_chunks)
