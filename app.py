@@ -18,58 +18,35 @@ load_dotenv()
 GOOGLE_API_KEY = st.secrets["api"]["key"]
 genai.configure(api_key=os.getenv(GOOGLE_API_KEY))
 
-# Utility functions
-def get_text_chunks(text):
-    """Splits the text into manageable chunks for processing."""
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
-    return text_splitter.split_text(text)
 
-def load_vector_store():
-    """Creates and saves a FAISS vector store from text chunks."""
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    return FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+def ai_qa(question, content):
+    """Use Google's Generative AI to answer questions based on the content."""
+    model = genai.GenerativeModel('gemini-pro')
+    prompt = f"""
+    You are an AI assistant for Mihir Dhirajlal Satra. Your task is to answer questions about Mihir's resume 
+    based on the following content. If the answer is not in the content, respond with 
+    "I'm sorry, I don't have that information in my current data."
 
-@st.cache_resource
-def load_chatbot_chain():
-    prompt_template = """
-    Answer the question as detailed as possible from the provided context. 
-    If the answer is not in the context, respond with 'Answer not available in the context'.\n
-    Context: {context}\n
-    Question: {question}\n
+    Resume Content:
+    {content}
+
+    Question: {question}
+
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
-    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-    return load_qa_chain(model, chain_type="stuff", prompt=prompt)
+    response = model.generate_content(prompt)
+    return response.text
 
-# Load resources
-vector_store = load_vector_store()
-chatbot_chain = load_chatbot_chain()
 
-def get_conversational_chain():
-    """Sets up the question-answering conversational chain."""
-    prompt_template = """
-    Answer the question as detailed as possible from the provided context. 
-    If the answer is not in the context, respond with 'Answer not available in the context'.\n
-    Context: {context}\n
-    Question: {question}\n
-    Answer:
-    """
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
-    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-    return load_qa_chain(model, chain_type="stuff", prompt=prompt)
-
-def handle_user_input(user_question):
-    """Processes the user input for the chatbot and returns the response."""
-    docs = vector_store.similarity_search(user_question)
-    response = chatbot_chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    return response["output_text"]
 
 def get_pdf_text(file_path):
     """Extracts text from the provided PDF file."""
-    reader = PdfReader(file_path)
-    raw_text = "".join([page.extract_text() for page in reader.pages])
-    return raw_text
+    with open(file_path, 'rb') as file:
+        reader = PdfReader(file)
+        text = ""
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
 
 # Section components
 def render_about_section():
@@ -262,16 +239,6 @@ def render_header():
     """Displays a header saying 'Hi, I am Mihir' at the top of every page."""
     st.markdown('<h1 style="text-align:center;">Hi, I am Mihir!</h1>', unsafe_allow_html=True)
 
-# Chatbot Section
-def render_chatbot_section():
-    st.header("Ask Me Anything!")
-    user_question = st.text_input("You: ", placeholder="Type your message here...")
-    if user_question:
-        try:
-            response = handle_user_input(user_question)
-            st.write("Chatbot Reply: ", response)
-        except Exception as error:
-            st.error(f"An error occurred: {error}")
 
 # Main application
 def main():
@@ -310,7 +277,19 @@ def main():
         render_education_section()
 
 
-    render_chatbot_section()
+    st.header("💬 Ask Me Anything")
+    user_question = st.text_input("You: ", placeholder="Type your question here...")
+    if user_question:
+        try:
+            file_path = "MihirDhirajlal_Satra_Resume.pdf"
+            resume_content = get_pdf_text(file_path)
+            with st.spinner("Thinking..."):
+                response = ai_qa(user_question, resume_content)
+            st.write("Answer:", response)
+        except FileNotFoundError:
+            st.error(f"Error: The PDF file '{file_path}' was not found. Please make sure it's in the correct location.")
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
 
     # Footer
     st.markdown('<div class="footer">', unsafe_allow_html=True)
