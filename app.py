@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 GOOGLE_API_KEY = st.secrets["api_key"]
-genai.configure(api_key=os.getenv(GOOGLE_API_KEY))
+genai.configure(api_key=GOOGLE_API_KEY)
 
 
 def ai_qa(question, content):
