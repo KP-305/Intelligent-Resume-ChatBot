@@ -71,6 +71,7 @@ def render_about_section():
         """)
     with col3: 
         st.image("computer-science.png")
+        
 
 def render_skills_section():
     """Renders the 'Skills' section."""
@@ -204,6 +205,72 @@ def render_education_section():
         st.markdown("**Institution:** University of Mumbai")
         st.markdown("**Duration:** Aug 2017 - May 2021")
 
+def render_gallery_section():
+    """Displays a gallery of candid photos."""
+    st.header("📸 Candid Photo Gallery")
+
+    # Path to the folder where the photos are stored
+    photos_folder = "gallery"
+
+    # Get all image files in the folder
+    image_files = [f for f in os.listdir(photos_folder) if f.endswith(('png', 'jpg', 'jpeg'))]
+
+    # Display images in a grid
+    cols = st.columns(3)  # Adjust the number of columns as needed
+    for idx, image_file in enumerate(image_files):
+        image_path = os.path.join(photos_folder, image_file)
+        image = Image.open(image_path)
+        with cols[idx % 3]:
+            st.image(image, use_column_width=True)
+
+# Function to render the contact section
+def render_contact_section():
+    """Renders the 'Contact Me' section with social media links and a contact form."""
+    st.header("📬Contact Me")
+
+    # Social Media Links
+    st.write("Feel free to connect with me on my social media:")
+    col1, col2, col3 = st.columns(3)
+    st.markdown("""
+        <style>
+        .icon-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .icon-container a {
+            margin: 0 20px;
+            font-size: 50px;
+            text-decoration: none;
+        }
+        </style>
+        <div class="icon-container">
+            <a href="https://www.linkedin.com/in/mihirsatra/" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="50" height="50">
+            </a>
+            <a href="https://github.com/mihirsatra44" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="50" height="50">
+            </a>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # with col1:
+    #     st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue)](https://www.linkedin.com/in/mihirsatra/)")
+    # with col2:
+    #     st.markdown("[![Gmail](https://img.shields.io/badge/Gmail-red)](mailto:kparekh305@gmail.com)")
+    # with col3:
+    #     st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-black)](https://github.com/KP-305)")
+
+    # Contact Form
+    with st.form("contact_form"):
+        name = st.text_input("Your Name")
+        email = st.text_input("Your Email")
+        query = st.text_area("Your Query")
+        submit_button = st.form_submit_button("Submit")
+
+        if submit_button:
+            st.success(f"Thank you, {name}! Mihir will get back to you soon.")
 
 def add_custom_css():
     """Adds custom CSS for styling the banner and footer."""
@@ -241,12 +308,29 @@ def add_custom_css():
 # Function to display photo in the sidebar
 def render_photo():
     """Displays the user's photo in the sidebar."""
-    image = Image.open("Kalindi_Vijesh_Parekh_Profile.jpg")  # Replace with the actual path to your image file
+    image = Image.open("Mihir.jpg")  # Replace with the actual path to your image file
     st.sidebar.image(image, caption="Mihir Dhirajlal Satra", use_column_width=True)
    
 def render_header():
     """Displays a header saying 'Hi, I am Mihir' at the top of every page."""
     st.markdown('<h1 style="text-align:center;">Hi, I am Mihir!</h1>', unsafe_allow_html=True)
+
+# Function to render the download PDF section
+def render_download_pdf_section():
+    """Renders the 'Download PDF' section with a button to download Mihir's resume."""
+    st.header("📄 Download Mihir's Resume")
+
+    # Path to the PDF file
+    pdf_file_path = "resumepdf/Mihir_Dhirajlal_Satra_Resume.pdf"  # Replace with the actual path
+
+    with open(pdf_file_path, "rb") as pdf_file:
+        pdf_bytes = pdf_file.read()
+
+    # Download button for the PDF file
+    st.download_button(label="Download Mihir's Resume", 
+                       data=pdf_bytes, 
+                       file_name="Mihir_Dhirajlal_Satra_Resume.pdf", 
+                       mime="application/pdf")
 
 # Main application
 def main():
@@ -271,7 +355,7 @@ def main():
     
 
     # Navigation
-    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education"))
+    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume"))
 
     # Display section
     if section == "About":
@@ -284,7 +368,12 @@ def main():
         render_projects_section()
     elif section == "Education":
         render_education_section()
-
+    elif section == "Gallery":
+        render_gallery_section()
+    elif section == "Contact Me":
+        render_contact_section()
+    elif section == "Download Resume":
+        render_download_pdf_section()
 
     with st.container(border = True):
     # Chatbot section
