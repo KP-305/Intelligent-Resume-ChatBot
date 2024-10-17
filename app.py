@@ -306,6 +306,30 @@ def render_header():
     """Displays a header saying 'Hi, I am Mihir' at the top of every page."""
     st.markdown('<h1 style="text-align:center;">Hi, I am Mihir!</h1>', unsafe_allow_html=True)
 
+def process_image(image_path, uniform_size=(300, 300)):
+    """Load, resize, and rotate an image to a uniform size and correct orientation."""
+    image = Image.open(image_path)
+    # Rotate image based on EXIF orientation
+    for orientation in ExifTags.TAGS.keys():
+        if ExifTags.TAGS[orientation] == 'Orientation':
+            break
+    try:
+        exif = image._getexif()
+        if exif:
+            orientation = exif.get(orientation)
+            if orientation == 3:
+                image = image.rotate(180, expand=True)
+            elif orientation == 6:
+                image = image.rotate(270, expand=True)
+            elif orientation == 8:
+                image = image.rotate(90, expand=True)
+    except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
+        pass
+    # Resize to uniform size
+    image = image.resize(uniform_size)
+    return image
+
 def render_gallery_section():
     """Displays a gallery of candid photos."""
     st.header("📸 Candid Photo Gallery")
@@ -317,10 +341,11 @@ def render_gallery_section():
     cols = st.columns(3)  # Adjust the number of columns as needed
     for idx, image_file in enumerate(image_files):
         image_path = os.path.join(photos_folder, image_file)
-        image = Image.open(image_path)
+        image = process_image(image_path)
+        caption = os.path.splitext(image_file)[0].replace('_', ' ').title()
         with cols[idx % 3]:
             st.image(image, use_column_width=True)
-            
+
 # Function to render the contact section
 def render_contact_section():
     """Renders the 'Contact Me' section with social media links and a contact form."""
