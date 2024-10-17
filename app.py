@@ -430,7 +430,7 @@ def main():
 
 
     # Navigation
-    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume"))
+    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume","Chatbot"))
 
     # Display section
     if section == "About":
@@ -449,7 +449,7 @@ def main():
         render_contact_section()
     elif section == "Download Resume":
         render_download_pdf_section()
-    elif section == "Chat With Me":
+    elif section == "Chatbot":
         st.header("💬 Ask Me Anything")
         user_question = st.text_input("You: ", placeholder="Type your question here...")
         if user_question:
