@@ -24,11 +24,27 @@ def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
     return text_splitter.split_text(text)
 
-def get_vector_store(text_chunks):
+def load_vector_store():
     """Creates and saves a FAISS vector store from text chunks."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
-    vector_store.save_local("faiss_index")
+    return FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+
+@st.cache_resource
+def load_chatbot_chain():
+    prompt_template = """
+    Answer the question as detailed as possible from the provided context. 
+    If the answer is not in the context, respond with 'Answer not available in the context'.\n
+    Context: {context}\n
+    Question: {question}\n
+    Answer:
+    """
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
+    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
+    return load_qa_chain(model, chain_type="stuff", prompt=prompt)
+
+# Load resources
+vector_store = load_vector_store()
+chatbot_chain = load_chatbot_chain()
 
 def get_conversational_chain():
     """Sets up the question-answering conversational chain."""
@@ -45,11 +61,8 @@ def get_conversational_chain():
 
 def handle_user_input(user_question):
     """Processes the user input for the chatbot and returns the response."""
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vector_store = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = vector_store.similarity_search(user_question)
-    chain = get_conversational_chain()
-    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    response = chatbot_chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     return response["output_text"]
 
 def get_pdf_text(file_path):
@@ -249,6 +262,17 @@ def render_header():
     """Displays a header saying 'Hi, I am Mihir' at the top of every page."""
     st.markdown('<h1 style="text-align:center;">Hi, I am Mihir!</h1>', unsafe_allow_html=True)
 
+# Chatbot Section
+def render_chatbot_section():
+    st.header("Ask Me Anything!")
+    user_question = st.text_input("You: ", placeholder="Type your message here...")
+    if user_question:
+        try:
+            response = handle_user_input(user_question)
+            st.write("Chatbot Reply: ", response)
+        except Exception as error:
+            st.error(f"An error occurred: {error}")
+
 # Main application
 def main():
     st.set_page_config(page_title="Mihir Dhirajlal Satra's Resume", page_icon=":briefcase:", layout="wide")
@@ -269,7 +293,6 @@ def main():
     # Display the user's photo
     render_photo()
 
-    
 
     # Navigation
     section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education"))
@@ -287,22 +310,7 @@ def main():
         render_education_section()
 
 
-    with st.container(border = True):
-    # Chatbot section
-        st.header(":balloon: Ask Me Anything!!")
-        user_question = st.text_input("You: ", placeholder="Type your message here...")
-        if user_question:
-            file_path = "MihirDhirajlal_Satra_Resume.pdf"  
-            raw_text = get_pdf_text(file_path)
-            text_chunks = get_text_chunks(raw_text)
-            print(text_chunks)
-            try:
-                get_vector_store(text_chunks)
-                response = handle_user_input(user_question)
-            except Exception as error:
-                print(error)
-            print(response)
-            st.write("Chatbot Reply: ", response)
+    render_chatbot_section()
 
     # Footer
     st.markdown('<div class="footer">', unsafe_allow_html=True)
