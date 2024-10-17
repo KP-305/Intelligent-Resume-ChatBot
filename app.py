@@ -309,13 +309,13 @@ def render_header():
 def process_image(image_path, uniform_size=(300, 300)):
     """Load, resize, and rotate an image to a uniform size and correct orientation."""
     image = Image.open(image_path)
-    # Rotate image based on EXIF orientation
-    for orientation in ExifTags.TAGS.keys():
-        if ExifTags.TAGS[orientation] == 'Orientation':
-            break
+    # Attempt to fix orientation based on EXIF data
     try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
         exif = image._getexif()
-        if exif:
+        if exif is not None:
             orientation = exif.get(orientation)
             if orientation == 3:
                 image = image.rotate(180, expand=True)
@@ -324,9 +324,10 @@ def process_image(image_path, uniform_size=(300, 300)):
             elif orientation == 8:
                 image = image.rotate(90, expand=True)
     except (AttributeError, KeyError, IndexError):
-        # cases: image don't have getexif
+        # If the image does not have EXIF data, continue without modification
         pass
-    # Resize to uniform size
+    
+    # Resize to the specified uniform size
     image = image.resize(uniform_size)
     return image
 
