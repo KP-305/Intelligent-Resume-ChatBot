@@ -449,21 +449,20 @@ def main():
         render_contact_section()
     elif section == "Download Resume":
         render_download_pdf_section()
-
-
-    st.header("💬 Ask Me Anything")
-    user_question = st.text_input("You: ", placeholder="Type your question here...")
-    if user_question:
-        try:
-            file_path = "MihirDhirajlal_Satra_Resume.pdf"
-            resume_content = get_pdf_text(file_path)
-            with st.spinner("Thinking..."):
-                response = ai_qa(user_question, resume_content)
-            st.write("Answer:", response)
-        except FileNotFoundError:
-            st.error(f"Error: The PDF file '{file_path}' was not found. Please make sure it's in the correct location.")
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+    elif section == "Chat With Me":
+        st.header("💬 Ask Me Anything")
+        user_question = st.text_input("You: ", placeholder="Type your question here...")
+        if user_question:
+            try:
+                file_path = "MihirDhirajlal_Satra_Resume.pdf"
+                resume_content = get_pdf_text(file_path)
+                with st.spinner("Thinking..."):
+                    response = ai_qa(user_question, resume_content)
+                st.write("Answer:", response)
+            except FileNotFoundError:
+                st.error(f"Error: The PDF file '{file_path}' was not found. Please make sure it's in the correct location.")
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
 
     # Footer
     st.markdown('<div class="footer">', unsafe_allow_html=True)
