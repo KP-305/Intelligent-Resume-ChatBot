@@ -1,5 +1,5 @@
 import streamlit as st
-from PIL import Image
+from PIL import Image, ExifTags
 from streamlit_lottie import st_lottie
 import requests
 from PyPDF2 import PdfReader
