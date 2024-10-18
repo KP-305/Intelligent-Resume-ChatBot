@@ -170,7 +170,7 @@ def render_skills_section():
         st.markdown(s)
 
     with col5:
-        st.header(":shamrock: Data")
+        st.header(":shamrock: Data Technologies")
         lst = ['Docker', 'Kuberentes', 'Spark']
         s = ''
         for i in lst:
@@ -408,6 +408,41 @@ def render_download_pdf_section():
                        file_name="Mihir_Dhirajlal_Satra_Resume.pdf", 
                        mime="application/pdf")
 
+def render_awards_and_honors():
+   
+    st.title("🏆 Awards and Honors")
+    # Create a container for better layout
+    with st.container():
+        col1, col2 = st.columns([1, 3])  # Two columns: one narrow for icons, another for text
+        
+        # Example award 1
+        with col1:
+            st.image("https://img.icons8.com/?size=100&id=GUqqHpQDjGqG&format=png&color=000000", width=50)  # Placeholder for award icon
+        with col2:
+            st.markdown("**Dean's List** (2021)")
+            st.markdown("*Awarded for maintaining a GPA of 3.8 or higher at KJ Somaiya.*")
+
+        st.markdown("---")  # Horizontal line to separate awards
+        
+        # Example award 2
+        with col1:
+            st.image("https://img.icons8.com/color/50/000000/cloud.png", width=50)  # Placeholder for award icon
+        with col2:
+            st.markdown("**AWS Certified Solutions Architect** (2022)")
+            st.markdown("*Certification awarded for expertise in cloud architecture and AWS technologies.*")
+        
+        st.markdown("---")  # Horizontal line to separate awards
+
+        # Example award 3
+        with col1:
+            st.image("https://img.icons8.com/color/50/000000/trophy.png", width=50)  # Placeholder for award icon
+        with col2:
+            st.markdown("**Top Performer Award** (2022)")
+            st.markdown("*Recognized for outstanding performance at LTI.*")
+
+        # Add more awards as needed
+        st.markdown("---")  # Horizontal line to separate awards
+
 # Main application
 def main():
     st.set_page_config(page_title="Mihir Dhirajlal Satra's Resume", page_icon=":briefcase:", layout="wide")
@@ -430,7 +465,7 @@ def main():
 
 
     # Navigation
-    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume","Chatbot"))
+    section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume","Chatbot","Awards and Honors"))
 
     # Display section
     if section == "About":
@@ -449,6 +484,8 @@ def main():
         render_contact_section()
     elif section == "Download Resume":
         render_download_pdf_section()
+    elif section == "Awards and Honors":
+        render_awards_and_honors()
     elif section == "Chatbot":
         st.header("💬 Ask Me Anything")
         user_question = st.text_input("You: ", placeholder="Type your question here...")
