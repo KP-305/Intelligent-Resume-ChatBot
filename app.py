@@ -409,7 +409,6 @@ def render_download_pdf_section():
                        mime="application/pdf")
 
 def render_awards_and_honors():
-   
     st.title("🏆 Awards and Honors")
     # Create a container for better layout
     with st.container():
@@ -462,7 +461,6 @@ def main():
     # Embed photo 
     # Display the user's photo
     render_photo()
-
 
     # Navigation
     section = st.sidebar.selectbox("Select a section to view:", ("About", "Skills", "Work Experience", "Projects", "Education", "Gallery","Contact Me", "Download Resume","Chatbot","Awards and Honors"))
